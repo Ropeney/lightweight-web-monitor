@@ -1,0 +1,8 @@
+[package]
+name = "web_monitor"
+version = "0.1.0"
+authors = ["Joseph Mullins <joseph@mindvision.com.au>"]
+
+[dependencies]
+hyper = "0.9.10"
+time = "0.1.35"
