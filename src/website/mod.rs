@@ -21,3 +21,10 @@ pub fn check_site(url: &str) -> Box<Response> {
         code: res.status.to_string(), url: url.to_string() })
 }
 
+#[test]
+pub fn check_site_returns_valid_response() {
+    let response = check_site("http://google.com");
+    assert_eq!(response.code, "200 OK");
+    assert_eq!(response.url, "http://google.com");
+    assert_eq!(response.time > 0, true);
+}
