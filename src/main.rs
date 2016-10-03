@@ -4,30 +4,25 @@ use std::sync::{Arc, Mutex};
 mod website;
 
 fn main() {
-    let sites = Arc::new(Mutex::new(vec![
-        "http://eevblog.com",
-        "http://ropeney.com",
-        "http://yahoo.com",
-        "http://gumtree.com.au",
-        "http://ebay.com.au",
-        "http://facebook.com",
-        "http://google.com",
-        "http://barrista.com"]));
+    let sites: Arc<Mutex<Vec<(fn(url: &str) -> Box<website::Response>, &str)>>> = Arc::new(Mutex::new(vec![
+        (website::check_site,"http://eevblog.com"),
+        (website::check_site, "http://google.com"),
+        ]));
 
     let mut children = vec![];
 
-    for _ in 0..8 {
+    for _ in 0..2 {
         let data = sites.clone();
 
         children.push(thread::spawn(move || {
 
         // This is so that the mutex unlocks quicker
-        let url = {
+        let (method, paramter) = {
             let mut data = data.lock().unwrap();
             data.pop().unwrap()
         };
 
-        let response = website::check_site(url);
+        let response = method(paramter);
 
         println!("{} : {} : {}ms", response.url, response.code,
             response.time);
