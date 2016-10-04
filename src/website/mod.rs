@@ -17,10 +17,15 @@ pub fn check_site(url: &str) -> Box<notification_queue::Response> {
         state: res.status.to_string(), identifier: url.to_string() })
 }
 
-#[test]
-pub fn check_site_returns_valid_response() {
-    let response = check_site("http://google.com");
-    assert_eq!(response.state, "200 OK");
-    assert_eq!(response.identifier, "http://google.com");
-    assert_eq!(response.time > 0, true);
+#[cfg(test)]
+mod tests {
+    use super::check_site;
+
+    #[test]
+    pub fn check_site_returns_valid_response() {
+        let response = check_site("http://google.com");
+        assert_eq!(response.state, "200 OK");
+        assert_eq!(response.identifier, "http://google.com");
+        assert_eq!(response.time > 0, true);
+    }
 }

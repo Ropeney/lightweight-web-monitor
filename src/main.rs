@@ -42,7 +42,7 @@ fn main() {
                     // This is so that the mutex unlocks quicker
                     let result = notifier.pop();
                     if result.is_ok() {
-                        let (method, paramater) = *result.unwrap();
+                        let (method, paramater) = result.unwrap();
                         let response = method(&paramater);
 
                         println!("{} : {} : {}ms", response.identifier, response.state,
