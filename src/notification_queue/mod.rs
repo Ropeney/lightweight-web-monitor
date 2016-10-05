@@ -10,7 +10,7 @@ pub struct Notifier {
 }
 
 impl Notifier {
-    pub fn add_to_queue(&self, closure: fn(url: &str) -> Box<Response>, identifier: &str)  {
+    pub fn push(&self, closure: fn(url: &str) -> Box<Response>, identifier: &str)  {
         let data = &self.queue.clone();
         let mut data = data.lock().unwrap();
         data.push((closure, identifier.to_string()));
@@ -46,23 +46,23 @@ mod tests {
     use website;
 
     #[test]
-    pub fn notifier_add_to_queue_adds_to_queue() {
+    pub fn notifier_push_adds_to_notifier_queue() {
         let notifier = Arc::new(Notifier::new());
-        notifier.add_to_queue(website::check_site, "https://google.com");
+        notifier.push(website::check_site, "https://google.com");
         assert_eq!(notifier.queue.lock().unwrap().len(), 1);
     }
 
     #[test]
     pub fn notifier_count_returns_correct_number() {
         let notifier = Arc::new(Notifier::new());
-        notifier.add_to_queue(website::check_site, "https://google.com");
+        notifier.push(website::check_site, "https://google.com");
         assert_eq!(notifier.count(), 1);
     }
 
     #[test]
     pub fn notifier_pop_removes_1_result() {
         let notifier = Arc::new(Notifier::new());
-        notifier.add_to_queue(website::check_site, "https://google.com");
+        notifier.push(website::check_site, "https://google.com");
         let _ = notifier.pop();
         assert_eq!(notifier.count(), 0);
     }
